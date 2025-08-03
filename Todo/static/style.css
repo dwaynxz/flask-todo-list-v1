@@ -5,3 +5,17 @@ text-align: center;
 input[type="checkbox"]:checked + span {
 text-decoration: line-through;
 }
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff; /* Bootstrap blue */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}

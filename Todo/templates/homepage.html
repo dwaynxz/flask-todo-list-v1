@@ -14,12 +14,15 @@
         List is empty. Add Items!!
     </p>
 {% else %}
-    {% for value in to_do_list.list.values() %}
-        <p>{{value}}</p>
+    {% for key, value in to_do_list.list.items() %}
+        <label for="item{{key}}" id="item{{key}}">
+            <input type="checkbox">
+            <span>{{value}}</span>
+        </label>
     {% endfor %}
 {% endif% }
 <form action="/add" method="POST">
-
+    <button type="submit" class="button"> Submit </button>
 </form>
 </body>
 </html>
