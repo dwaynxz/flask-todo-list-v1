@@ -9,5 +9,17 @@
 <h1> To Do List</h1>
 <br>
 <br>
+{% if to_do_list.is_empty() %}
+    <p>
+        List is empty. Add Items!!
+    </p>
+{% else %}
+    {% for value in to_do_list.list.values() %}
+        <p>{{value}}</p>
+    {% endfor %}
+{% endif% }
+<form action="/add" method="POST">
+
+</form>
 </body>
 </html>
