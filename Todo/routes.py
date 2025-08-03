@@ -6,7 +6,7 @@ to_do_list = todo
 
 @app.route("/")
 @app.route("home")
-@app.route("todo-list")
+@app.route("/todo-list")
 def home():
     return render_template("homepage.html", to_do_list=to_do_list)
 
