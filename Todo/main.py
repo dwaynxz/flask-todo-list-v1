@@ -10,6 +10,9 @@ class TodoList:
         if len(self.list) == 0:
             return True
 
+    def new_list(self):
+        self.list.clear()
+
     def __repr__(self):
         return f"Todo List: {self.list}"
 

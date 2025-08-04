@@ -19,3 +19,9 @@ def add():
         todo.add(task)
         flash ("Task added", category="success")
         return redirect("/")
+
+@app.route("/new", methods=["POST"])
+def new():
+    todo.new_list()
+    flash("New To-Do list created", "success")
+    return redirect("/home")
