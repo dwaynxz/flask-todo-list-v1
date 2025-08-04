@@ -19,3 +19,23 @@ text-decoration: line-through;
 .button:hover {
   background-color: #0056b3;
 }
+
+.offcanvas-header {
+  position: relative;
+}
+
+.offcanvas-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+}
+.navlinks {
+color: #b8daff;
+text-decoration: none;
+display: block;
+margin-bottom: 10px;
+}
+
+.navlinks:hover {
+color: 	#ffffff}
