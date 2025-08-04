@@ -17,3 +17,13 @@ class TodoList:
         return f"Todo List: {self.list}"
 
 todo = TodoList()
+
+class ListManager:
+    def __init__(self):
+        self.lists = {}
+
+    def add_list(self, title, todolist):
+        self.lists[title] = todolist
+
+    def __repr__(self):
+        return f"Lists: {self.lists}"

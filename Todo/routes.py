@@ -3,7 +3,7 @@ from Todo.main import todo, Lists
 from flask import render_template, request, flash, redirect
 
 to_do_list = todo
-to_do_lists = Lists()
+to_do_lists = ListManager()
 
 @app.route("/")
 @app.route("/home")
