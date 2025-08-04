@@ -1,6 +1,6 @@
 from Todo import app
 from Todo.main import todo
-from flask import render_template, request, flash
+from flask import render_template, request, flash, redirect
 
 to_do_list = todo
 
@@ -14,3 +14,8 @@ def add():
     task = request.form.get("task", None)
     if not task:
         flash("The Task field is empty. Please add a task", "danger")
+        return redirect("/")
+    else:
+        todo.add(task)
+        flash ("Task added", category="success")
+        return redirect("/")
