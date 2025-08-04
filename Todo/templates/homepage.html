@@ -22,7 +22,10 @@
     {% endfor %}
 {% endif %}
 <form action="/add" method="POST">
-    <button type="submit" class="button"> Submit </button>
+    <label for="item" id="item">
+        <input type="text" placeholder="Task" name="task">
+    </label>
+    <button type="submit" class="button"> Add </button>
 </form>
 </body>
 </html>
