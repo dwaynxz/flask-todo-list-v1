@@ -2,17 +2,6 @@
 {% block title %} Home - Todo List {% endblock %}
 {% block content %}
 <main class="container py-5 pt-5 mt-5">
-    <div class="mb-4">
-        {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <span class="alert alert-{{category}}">{{message}}</span>
-            {% endfor %}
-    </div>
-        {% endif %}
-    {% endwith %}
-    <br>
-    <br>
         <div class="card shadow-sm">
             <div class="card-body">
                 {% if to_do_list.is_empty() %}

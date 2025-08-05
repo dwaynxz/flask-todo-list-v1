@@ -25,8 +25,7 @@
                 <a class="navlinks fs-3 pt-2" aria-current="page" href="/home">Home</a>
               </li>
               <li class="nav-item">
-                <a class="navlinks fs-3 pt-2
-" href="#">Create a list</a>
+                <a class="navlinks fs-3 pt-2" href="/create-todo">Create a list</a>
               </li>
             </ul>
           </div>
@@ -36,6 +35,18 @@
 </header>
 <br>
 <br>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container pt-5 mt-5">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
 {% block content %}
 
 {% endblock %}
