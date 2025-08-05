@@ -17,8 +17,8 @@
             <div class="container py-5 pt-5 mt-5">
                 <div class="mx-auto text-center">
                 <ul class="list-group">
-                    {% for title in to_do_lists.lists %}
-                        <li class="list-group-item"><a href="" class="btn btn-lg btn-outline-dark button-dimensions">{{title}}</a></li>
+                    {% for id_,title in to_do_lists.lists %}
+                        <li class="list-group-item"><a href="/edit/{{id_}}" class="btn btn-lg btn-outline-dark button-dimensions">{{title}}</a></li>
                     {% endfor %}
             {% endif %}
                 </ul>
