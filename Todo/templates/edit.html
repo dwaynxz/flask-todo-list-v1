@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %} Home - Edit List {% endblock %}
+
+{% block content %}
+
+<main class="container py-5 pt-5 mt-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% if list.is_empty() %}
+                    <p class="lead text-muted text-center mb-0">
+                        List is empty. Add Items!!
+                    </p>
+                {% else %}
+                    {% for key, value in list.list.items() %}
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <label>
+                                    <input type="checkbox" class="form-check-input me-2">
+                                    <span class="form-check-label fs-5 text-secondary">{{value}}</span>
+                                </label>
+                                <br>
+                            </li>
+                        </ul>
+                    {% endfor %}
+                {% endif %}
+                <br>
+                <br>
+            </div>
+        </div>
+        <form action="{{ url_for('add_existing', id_=id_) }}" method="POST" class="mt-4 d-flex gap-2">
+            <label for="item" id="item">
+                <input type="text" class="form-control border-primary shadow-sm" placeholder="Task" name="task">
+            </label>
+            <button type="submit" class="btn btn-outline-primary"> Add </button>
+        </form>
+        <br>
+        <br>
+    <form action="/save-existing" method="POST">
+        <button type="submit" class="btn btn-outline-secondary">Save</button>
+    </form>
+</main>
+
+{% endblock %}
