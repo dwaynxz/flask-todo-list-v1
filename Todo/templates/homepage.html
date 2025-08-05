@@ -4,13 +4,28 @@
 
 {% block content %}
 <main>
-    <div class="container py-5 pt-5 mt-5 position-absolute bottom-0 end-0 d-inline-block p-0 m-0">
-        <a href="/create-todo" class="btn btn-info btn-lg rounded-circle">+</a>
-    </div>
-    <div>
-        <ul class="list-group">
-            <li class="list-group-item"></li>
-        </ul>
-    </div>
+        {% if to_do_lists.is_empty() %}
+            <div class="d-flex justify-content-center align-items-center vh-100">
+                <a class="disabled-link" href="/create-todo">
+                    You don't have lists click here or click on the + icon
+                </a>
+            </div>
+                <div class="container py-5 pt-5 mt-5 position-absolute bottom-0 end-0 d-inline-block p-0 m-0">
+                    <a href="/create-todo" class="btn btn-info btn-lg rounded-circle">+</a>
+                </div>
+        {% else %}
+            <div class="container py-5 pt-5 mt-5">
+                <div class="mx-auto text-center">
+                <ul class="list-group">
+                    {% for title in to_do_lists.lists %}
+                        <li class="list-group-item"><a href="" class="btn btn-lg btn-outline-dark button-dimensions">{{title}}</a></li>
+                    {% endfor %}
+            {% endif %}
+                </ul>
+                </div>
+                <div class="container py-5 pt-5 mt-5 position-absolute bottom-0 end-0 d-inline-block p-0 m-0">
+                    <a href="/create-todo" class="btn btn-info btn-lg rounded-circle">+</a>
+                </div>
+            </div>
 </main>
 {% endblock %}
