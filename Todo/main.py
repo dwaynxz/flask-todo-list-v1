@@ -10,7 +10,7 @@ class TodoList:
         if len(self.list) == 0:
             return True
 
-    def new_list(self):
+    def clear_list(self):
         self.list.clear()
 
     def __repr__(self):
@@ -21,6 +21,10 @@ todo = TodoList()
 class ListManager:
     def __init__(self):
         self.lists = {}
+
+    def is_empty(self):
+        if len(self.lists) == 0:
+            return True
 
     def add_list(self, title, todolist):
         self.lists[title] = todolist
