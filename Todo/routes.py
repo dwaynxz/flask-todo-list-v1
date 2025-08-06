@@ -61,3 +61,10 @@ def edit(id_):
     current_id = to_do_lists.get_key_by_id(id_)
     current_list = to_do_lists.lists[current_id]
     return render_template("edit.html", list=current_list, id_=id_)
+
+@app.route("/delete-existing/<int:id_>")
+def delete_existing(id_):
+    current_key = to_do_lists.get_key_by_id(id_)
+    to_do_lists.delete_list(current_key)
+    flash("Deleted", "danger")
+    return redirect(url_for("home"))
