@@ -35,5 +35,8 @@ class ListManager:
             if id_ in key:
                 return key
 
+    def delete_list(self, key):
+        self.lists.pop(key)
+
     def __repr__(self):
         return f"Lists: {self.lists}"
