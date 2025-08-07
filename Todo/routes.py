@@ -19,11 +19,11 @@ def add():
     task = request.form.get("task", None)
     if not task:
         flash("The Task field is empty. Please add a task", "danger")
-        return redirect("/create-todo")
+        return redirect(url_for("create_list"))
     else:
         todo.add(task)
         flash ("Task added", category="success")
-        return redirect("/create-todo")
+        return redirect(url_for("create_list"))
 
 @app.route("/add-existing/<int:id_>", methods=["POST"])
 def add_existing(id_):
@@ -56,15 +56,26 @@ def save_existing():
     flash("Saved", "success")
     return redirect("/home")
 
-@app.route("/edit/<int:id_>")
+@app.route("/edit/<int:id_>", methods=["POST"])
 def edit(id_):
     current_id = to_do_lists.get_key_by_id(id_)
     current_list = to_do_lists.lists[current_id]
     return render_template("edit.html", list=current_list, id_=id_)
 
-@app.route("/delete-existing/<int:id_>")
+@app.route("/delete-existing/<int:id_>", methods=["POST"])
 def delete_existing(id_):
     current_key = to_do_lists.get_key_by_id(id_)
     to_do_lists.delete_list(current_key)
     flash("Deleted", "danger")
     return redirect(url_for("home"))
+
+@app.route("/task-remove/<int:task_id>", methods=["POST"])
+def task_remove(task_id):
+    key = to_do_list.get_key_by_id(task_id)
+    to_do_list.delete_task(key)
+    return redirect(url_for("create_list"))
+
+@app.route("/task-done/<int:task_id>", methods=["POST"])
+def task_done(task_id):
+    to_do_list.mark_task_done(task_id)
+    return redirect(url_for("create_list"))
