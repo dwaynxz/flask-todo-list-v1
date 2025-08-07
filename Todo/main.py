@@ -4,7 +4,7 @@ class TodoList:
 
     def add(self, item):
         length_of_list = len(self.list)
-        self.list[length_of_list+1] = item
+        self.list[(length_of_list+1, False)] = item
 
     def is_empty(self):
         if len(self.list) == 0:
@@ -12,6 +12,33 @@ class TodoList:
 
     def clear_list(self):
         self.list.clear()
+
+    def delete_task(self, key):
+        self.list.pop(key)
+
+    def get_status_by_task_id(self, inp_task_id):
+        for task_id, status in self.list.keys():
+            if inp_task_id == task_id:
+                return status
+
+    def mark_task_done(self, inp_task_id):
+        for key in list(self.list.keys()):
+            id_, status = key
+            if inp_task_id == id_:
+                new_key = (id_, True)
+                self.list[new_key] = self.list[key]
+                self.list.pop(key)
+                break
+
+    def get_key_by_id(self, inp_task_id):
+        for task_id, status in self.list.keys():
+            if inp_task_id == task_id:
+                return (task_id, status)
+
+
+    @staticmethod
+    def get_id_by_status_id(status_id):
+        return status_id[0]
 
     def __repr__(self):
         return f"Todo List: {self.list}"
