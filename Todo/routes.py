@@ -56,7 +56,7 @@ def save_existing():
     flash("Saved", "success")
     return redirect("/home")
 
-@app.route("/edit/<int:id_>", methods=["POST"])
+@app.route("/edit/<int:id_>")
 def edit(id_):
     current_id = to_do_lists.get_key_by_id(id_)
     current_list = to_do_lists.lists[current_id]
