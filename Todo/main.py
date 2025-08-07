@@ -28,9 +28,9 @@ class TodoList:
         change_status(self.list, inp_task_id, False)
 
     def get_key_by_id(self, inp_task_id):
-        for task_id, status in self.list.keys():
-            if inp_task_id == task_id:
-                return (task_id, status)
+        for key in self.list.keys():
+            if inp_task_id in key:
+                return key
 
 
     @staticmethod
@@ -67,6 +67,11 @@ class ListManager:
         for key in self.lists.keys():
             if id_ in key:
                 return key
+
+    def fetch_list(self, id_):
+        for key in self.lists.keys():
+            if id_ in key:
+                return self.lists[key]
 
     def delete_list(self, key):
         self.lists.pop(key)
