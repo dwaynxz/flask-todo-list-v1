@@ -12,16 +12,39 @@
                         List is empty. Add Items!!
                     </p>
                 {% else %}
-                    {% for key, value in list.list.items() %}
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <label>
-                                    <input type="checkbox" class="form-check-input me-2">
-                                    <span class="form-check-label fs-5 text-secondary">{{value}}</span>
-                                </label>
-                                <br>
-                            </li>
-                        </ul>
+                    {% for id_status, task in list.list.items() %}
+                        {% with task_id = list.get_id_by_status_id(id_status) %}
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                        {% if list.get_status_by_task_id(task_id) %}
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="m-0">
+                                                    <span class="fs-5 text-secondary task-done">{{task}}</span>
+                                                </label>
+                                                <form action="{{ url_for('existing_task_undone', task_id=task_id, id_=id_) }}" method="post">
+                                                    <button type="submit" class="btn btn-success">↶</button>
+                                                </form>
+                                                <form action="{{ url_for('existing_task_remove', task_id=task_id, id_=id_) }}" method="post">
+                                                       <button type="submit" class="btn btn-danger">🗑️</button>
+                                                </form>
+                                            </div>
+                                        {% else %}
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="m-0">
+                                                    <span class="fs-5 text-secondary">{{task}}</span>
+                                                </label>
+                                                 <form action="{{ url_for('existing_task_done', task_id=task_id, id_=id_) }}" method="post">
+                                                    <button type="submit" class="btn btn-success">✔</button>
+                                                 </form>
+                                                   <form action="{{ url_for('existing_task_remove', task_id=task_id, id_=id_) }}" method="post">
+                                                       <button type="submit" class="btn btn-danger">🗑️</button>
+                                                    </form>
+                                             </div>
+                                        {% endif %}
+                                    <br>
+                                </li>
+                            </ul>
+                        {% endwith %}
                     {% endfor %}
                 {% endif %}
                 <br>
