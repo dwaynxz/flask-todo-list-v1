@@ -28,7 +28,7 @@
                 <br>
             </div>
         </div>
-        <form action="{{ url_for('add_existing', id_=id_) }}" method="POST" class="mt-4 d-flex gap-2">
+        <form action="{{ url_for('add_existing', id_=id_) }}" method="post" class="mt-4 d-flex gap-2">
             <label for="item" id="item">
                 <input type="text" class="form-control border-primary shadow-sm" placeholder="Task" name="task">
             </label>
@@ -36,7 +36,7 @@
         </form>
         <br>
         <br>
-    <form action="/save-existing" method="POST">
+    <form action="/save-existing" method="post">
         <button type="submit" class="btn btn-outline-secondary">Save</button>
     </form>
 </main>
