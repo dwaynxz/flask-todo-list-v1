@@ -9,23 +9,43 @@
                         List is empty. Add Items!!
                     </p>
                 {% else %}
-                    {% for key, value in to_do_list.list.items() %}
-                        <ul class="list-group">
-                            <li class="list-group-item">
-                                <label>
-                                    <input type="checkbox" class="form-check-input me-2">
-                                    <span class="form-check-label fs-5 text-secondary">{{value}}</span>
-                                </label>
-                                <br>
-                            </li>
-                        </ul>
+                    {% for id_status, task in to_do_list.list.items() %}
+                        {% with task_id = to_do_list.get_id_by_status_id(id_status) %}
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                        {% if to_do_list.get_status_by_task_id(task_id) %}
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="m-0">
+                                                    <span class="fs-5 text-secondary task-done">{{task}}</span>
+                                                </label>
+                                                <form action="{{ url_for('task_remove', task_id=task_id) }}" method="post">
+                                                       <button type="submit" class="btn btn-danger">🗑️</button>
+                                                </form>
+                                            </div>
+                                        {% else %}
+                                            <div class="d-flex align-items-center gap-2">
+                                                <label class="m-0">
+                                                    <span class="fs-5 text-secondary">{{task}}</span>
+                                                </label>
+                                                 <form action="{{ url_for('task_done', task_id=task_id) }}" method="post">
+                                                    <button type="submit" class="btn btn-success">✔</button>
+                                                 </form>
+                                                   <form action="{{ url_for('task_remove', task_id=task_id) }}" method="post">
+                                                       <button type="submit" class="btn btn-danger">🗑️</button>
+                                                    </form>
+                                             </div>
+                                        {% endif %}
+                                    <br>
+                                </li>
+                            </ul>
+                        {% endwith %}
                     {% endfor %}
                 {% endif %}
                 <br>
                 <br>
             </div>
         </div>
-        <form action="/add" method="POST" class="mt-4 d-flex gap-2">
+        <form action="/add" method="post" class="mt-4 d-flex gap-2">
             <label for="item" id="item">
                 <input type="text" class="form-control border-primary shadow-sm" placeholder="Task" name="task">
             </label>
@@ -33,7 +53,7 @@
         </form>
         <br>
         <br>
-    <form action="/save" method="POST">
+    <form action="/save" method="post">
         <label for="title" id="title">
             <input type="text" name="title" class="border border-primary-subtle" placeholder="Title">
         </label>
