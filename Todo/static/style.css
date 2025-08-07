@@ -2,9 +2,7 @@ h1 {
 text-align: center;
 }
 
-input[type="checkbox"]:checked + span {
-text-decoration: line-through;
-}
+
 .button {
   display: inline-block;
   padding: 10px 20px;
@@ -47,4 +45,8 @@ width: 600px;
 .disabled-link {
 color: #b5b5b5;
 text-decoration: none;
+}
+
+.task-done {
+text-decoration: line-through;
 }
