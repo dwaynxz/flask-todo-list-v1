@@ -22,13 +22,10 @@ class TodoList:
                 return status
 
     def mark_task_done(self, inp_task_id):
-        for key in list(self.list.keys()):
-            id_, status = key
-            if inp_task_id == id_:
-                new_key = (id_, True)
-                self.list[new_key] = self.list[key]
-                self.list.pop(key)
-                break
+        change_status(self.list, inp_task_id, True)
+
+    def mark_task_undone(self, inp_task_id):
+        change_status(self.list, inp_task_id, False)
 
     def get_key_by_id(self, inp_task_id):
         for task_id, status in self.list.keys():
@@ -42,6 +39,15 @@ class TodoList:
 
     def __repr__(self):
         return f"Todo List: {self.list}"
+
+def change_status(inp_dict, inp_task_id, new_status):
+    for key in list(inp_dict.keys()):
+        id_, status = key
+        if inp_task_id == id_:
+            new_key = (id_, new_status)
+            inp_dict[new_key] = inp_dict[key]
+            inp_dict.pop(key)
+            break
 
 todo = TodoList({})
 
