@@ -79,3 +79,8 @@ def task_remove(task_id):
 def task_done(task_id):
     to_do_list.mark_task_done(task_id)
     return redirect(url_for("create_list"))
+
+@app.route("/task-undone/<int:task_id>", methods=["POST"])
+def task_undone(task_id):
+    to_do_list.mark_task_undone(task_id)
+    return redirect(url_for("create_list"))
