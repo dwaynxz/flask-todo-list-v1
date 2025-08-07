@@ -32,8 +32,7 @@ def add_existing(id_):
         flash("The Task field is empty. Please add a task", "danger")
         return redirect(url_for("edit", id_=id_))
     else:
-        current_id = to_do_lists.get_key_by_id(id_)
-        current_list = to_do_lists.lists[current_id]
+        current_list = to_do_lists.fetch_list(id_)
         current_list.add(task)
         flash ("Task added", category="success")
         return redirect(url_for("edit", id_=id_))
@@ -58,8 +57,7 @@ def save_existing():
 
 @app.route("/edit/<int:id_>")
 def edit(id_):
-    current_id = to_do_lists.get_key_by_id(id_)
-    current_list = to_do_lists.lists[current_id]
+    current_list = to_do_lists.fetch_list(id_)
     return render_template("edit.html", list=current_list, id_=id_)
 
 @app.route("/delete-existing/<int:id_>", methods=["POST"])
@@ -84,3 +82,22 @@ def task_done(task_id):
 def task_undone(task_id):
     to_do_list.mark_task_undone(task_id)
     return redirect(url_for("create_list"))
+
+@app.route("/existing-task-remove/<int:id_>/<int:task_id>", methods=["POST"])
+def existing_task_remove(id_, task_id):
+    current_list = to_do_lists.fetch_list(id_)
+    key = current_list.get_key_by_id(task_id)
+    current_list.delete_task(key)
+    return redirect(url_for("edit", id_=id_))
+
+@app.route("/existing-task-done/<int:id_>/<int:task_id>)", methods=["POST"])
+def existing_task_done(id_, task_id):
+    current_list = to_do_lists.fetch_list(id_)
+    current_list.mark_task_done(task_id)
+    return redirect(url_for("edit", id_=id_))
+
+@app.route("/existing-task-undone/<int:id_>/<int:task_id>)", methods=["POST"])
+def existing_task_undone(id_, task_id):
+    current_list = to_do_lists.fetch_list(id_)
+    current_list.mark_task_undone(task_id)
+    return redirect(url_for("edit", id_=id_))
