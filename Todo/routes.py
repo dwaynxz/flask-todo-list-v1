@@ -90,13 +90,13 @@ def existing_task_remove(id_, task_id):
     current_list.delete_task(key)
     return redirect(url_for("edit", id_=id_))
 
-@app.route("/existing-task-done/<int:id_>/<int:task_id>)", methods=["POST"])
+@app.route("/existing-task-done/<int:id_>/<int:task_id>", methods=["POST"])
 def existing_task_done(id_, task_id):
     current_list = to_do_lists.fetch_list(id_)
     current_list.mark_task_done(task_id)
     return redirect(url_for("edit", id_=id_))
 
-@app.route("/existing-task-undone/<int:id_>/<int:task_id>)", methods=["POST"])
+@app.route("/existing-task-undone/<int:id_>/<int:task_id>", methods=["POST"])
 def existing_task_undone(id_, task_id):
     current_list = to_do_lists.fetch_list(id_)
     current_list.mark_task_undone(task_id)
