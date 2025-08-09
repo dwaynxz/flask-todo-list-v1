@@ -10,7 +10,7 @@ This application does not require any external database setup, making it ideal f
 
 A modern user interface is provided using Bootstrap, with some design assistance and suggestions from Chatgpt to enhance the layout. You can customize or replace it with your own design.
 
-For a more advanced version with persistent storage and SQLAlchemy database integration, see Flask Todo List v2(in development).
+For a more advanced version with persistent storage and SQLAlchemy database integration, see **[Flask Todo List v2](https://github.com/dwaynxz/flask-todo-list-v2.git)** (in development).
 
 
 
