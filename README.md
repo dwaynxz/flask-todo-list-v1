@@ -41,7 +41,7 @@ For a more advanced version with persistent storage and SQLAlchemy database inte
   cd flask-todo-list-v1
 ````
 
-2. 
+2. Install dependencies:
 ``` bash
     pip install -r requirements.txt
 ```
