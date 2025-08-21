@@ -51,7 +51,7 @@ For a more advanced version with persistent storage and SQLAlchemy database inte
 ```
 4. Run the app:
 ```bash
-  flask run
+  python run.py
 ```
 ### Future Version
 I’m currently working on **[Flask Todo List v2](https://github.com/dwaynxz/flask-todo-list-v2.git)**, that will use SQL alchemy for persistent storage.
