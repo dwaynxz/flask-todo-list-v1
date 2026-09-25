@@ -21,10 +21,10 @@
                                                 <label class="m-0">
                                                     <span class="fs-5 text-secondary task-done">{{task}}</span>
                                                 </label>
-                                                <form action="{{ url_for('existing_task_undone', task_id=task_id, id_=id_) }}" method="post">
+                                                <form action="{{ url_for('main.existing_task_undone', task_id=task_id, id_=id_) }}" method="post">
                                                     <button type="submit" class="btn btn-outline-warning">↶</button>
                                                 </form>
-                                                <form action="{{ url_for('existing_task_remove', task_id=task_id, id_=id_) }}" method="post">
+                                                <form action="{{ url_for('main.existing_task_remove', task_id=task_id, id_=id_) }}" method="post">
                                                        <button type="submit" class="btn btn-danger">🗑️</button>
                                                 </form>
                                             </div>
@@ -33,10 +33,10 @@
                                                 <label class="m-0">
                                                     <span class="fs-5 text-secondary">{{task}}</span>
                                                 </label>
-                                                 <form action="{{ url_for('existing_task_done', task_id=task_id, id_=id_) }}" method="post">
+                                                 <form action="{{ url_for('main.existing_task_done', task_id=task_id, id_=id_) }}" method="post">
                                                     <button type="submit" class="btn btn-success">✔</button>
                                                  </form>
-                                                   <form action="{{ url_for('existing_task_remove', task_id=task_id, id_=id_) }}" method="post">
+                                                   <form action="{{ url_for('main.existing_task_remove', task_id=task_id, id_=id_) }}" method="post">
                                                        <button type="submit" class="btn btn-danger">🗑️</button>
                                                     </form>
                                              </div>
@@ -51,7 +51,7 @@
                 <br>
             </div>
         </div>
-        <form action="{{ url_for('add_existing', id_=id_) }}" method="post" class="mt-4 d-flex gap-2">
+        <form action="{{ url_for('main.add_existing', id_=id_) }}" method="post" class="mt-4 d-flex gap-2">
             <label for="item" id="item">
                 <input type="text" class="form-control border-primary shadow-sm" placeholder="Task" name="task">
             </label>
