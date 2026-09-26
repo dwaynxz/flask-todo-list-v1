@@ -1,6 +1,6 @@
 from Todo.main import todo, ListManager, TodoList
 from flask import render_template, request, flash, redirect, url_for, Blueprint
-from Todo.forms import RegistrationForm
+from Todo.forms import RegistrationForm, LoginForm
 from Todo.models import User, List, ListItems
 from Todo.extensions import bcrypt, db
 
@@ -107,7 +107,7 @@ def existing_task_undone(id_, task_id):
     return redirect(url_for("main.edit", id_=id_))
 
 
-#---Registration Route---
+#---Registration route---
 @main.route("/register", methods=["GET", "POST"])
 def register():
     form = RegistrationForm()
@@ -125,3 +125,9 @@ def register():
             flash("Account Created Sucessfully", "success")
             return redirect(url_for("main.home"))
     return render_template("register.html", form=form)
+
+#---Login route---
+@main.route("/login")
+def login():
+    form = LoginForm()
+    return render_template("login.html", form=form)
