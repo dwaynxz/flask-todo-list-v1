@@ -2,6 +2,7 @@ from Todo.main import todo, ListManager, TodoList
 from flask import render_template, request, flash, redirect, url_for, Blueprint
 from Todo.forms import RegistrationForm
 from Todo.models import User, List, ListItems
+from Todo.extensions import bcrypt, db
 
 main = Blueprint("main", __name__)
 
@@ -110,6 +111,17 @@ def existing_task_undone(id_, task_id):
 @main.route("/register", methods=["GET", "POST"])
 def register():
     form = RegistrationForm()
-    if request.method == "POST":
-        pass
+    if form.validate_on_submit():
+        name = form.name.data
+        email = form.email.data
+        password = form.password.data
+        user = User.query.filter_by(email=email).first()
+        if user:
+            flash("Account already exists. Please register or use a different email.", "danger")
+        else:
+            user = User(name=name, email=email, password=bcrypt.generate_password_hash(password=password))
+            db.session.add(user)
+            db.session.commit()
+            flash("Account Created Sucessfully", "success")
+            return redirect(url_for("main.home"))
     return render_template("register.html", form=form)
