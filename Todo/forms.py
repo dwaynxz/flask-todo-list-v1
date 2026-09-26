@@ -11,5 +11,5 @@ class RegistrationForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField("Email", validators=[DataRequired(message="Email fiel cannot be empty"), Email()])
-    password = PasswordField("Password", validators=[DataRequired(message="Password field cannot be empty"), EqualTo("confirm_password")])
+    password = PasswordField("Password", validators=[DataRequired(message="Password field cannot be empty")])
     submit = SubmitField("Login")

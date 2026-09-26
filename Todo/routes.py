@@ -2,7 +2,8 @@ from Todo.main import todo, ListManager, TodoList
 from flask import render_template, request, flash, redirect, url_for, Blueprint
 from Todo.forms import RegistrationForm, LoginForm
 from Todo.models import User, List, ListItems
-from Todo.extensions import bcrypt, db
+from Todo.extensions import bcrypt, db, login_manager
+from flask_login import login_user, logout_user, current_user
 
 main = Blueprint("main", __name__)
 
@@ -112,6 +113,7 @@ def existing_task_undone(id_, task_id):
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        # retrieve data from the form
         name = form.name.data
         email = form.email.data
         password = form.password.data
@@ -121,13 +123,27 @@ def register():
         else:
             user = User(name=name, email=email, password=bcrypt.generate_password_hash(password=password))
             db.session.add(user)
-            db.session.commit()
+            db.session.commit() # add user to the database
             flash("Account Created Sucessfully", "success")
             return redirect(url_for("main.home"))
     return render_template("register.html", form=form)
 
 #---Login route---
-@main.route("/login")
+@main.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        user = User.query.filter_by(email=email).first()
+        if not user:
+            flash("Account doesn't exist. Please register", "danger")
+            return redirect(url_for("main.home"))
+        else:
+            if not bcrypt.check_password_hash(user.password, password): # check password hash
+                flash("Incorrect password", "danger")
+            else:
+                login_user(user)
+                flash("Logged in successfully", "success")
+                return redirect(url_for("main.home"))
     return render_template("login.html", form=form)

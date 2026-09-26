@@ -14,10 +14,10 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
-    # login_manager.init_app(app)
+    login_manager.init_app(app)
     bcrypt.init_app(app)
 
-    # login_manager.login_view = "login"
+    login_manager.login_view = "login"
     from Todo.routes import main
     app.register_blueprint(main)
     return app
