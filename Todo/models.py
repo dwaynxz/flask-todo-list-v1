@@ -11,13 +11,13 @@ class User(db.Model, UserMixin):
 
 class List(db.Model):
     list_id = db.Column(db.Integer, primary_key = True, unique=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("User.user_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.user_id"))
     list_title = db.Column(db.String(600), nullable=False)
     # one list can have multiple list items
     list_items = db.relationship("ListItems", backref="list", lazy=True)
 
 class ListItems(db.Model):
     list_items_id = db.Column(db.Integer, primary_key = True, unique=True)
-    list_id = db.Column(db.Integer, db.ForeignKey("List.list_id"))
+    list_id = db.Column(db.Integer, db.ForeignKey("list.list_id"))
     list_item = db.Column(db.String, nullable=False)
     status = db.Column(db.Boolean, nullable=False)
