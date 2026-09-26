@@ -1,6 +1,7 @@
 from Todo.main import todo, ListManager, TodoList
 from flask import render_template, request, flash, redirect, url_for, Blueprint
-
+from Todo.forms import RegistrationForm
+from Todo.models import User, List, ListItems
 
 main = Blueprint("main", __name__)
 
@@ -103,3 +104,12 @@ def existing_task_undone(id_, task_id):
     current_list = to_do_lists.fetch_list(id_)
     current_list.mark_task_undone(task_id)
     return redirect(url_for("main.edit", id_=id_))
+
+
+#---Registration Route---
+@main.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegistrationForm()
+    if request.method == "POST":
+        pass
+    return render_template("register.html", form=form)

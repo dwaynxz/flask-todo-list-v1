@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Todo List{% endblock %}
+
+{% block content %}
+
+<div class="container d-flex justify-content-center align-items-center register-container">
+    <div class="card shadow-sm register-card">
+        <div class="card-body p-4 p-md-5">
+
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Create an Account</h2>
+                <p class="text-muted mb-0">
+                    Create an account to start managing your todo lists.
+                </p>
+            </div>
+
+            <form method="POST" novalidate>
+                {{ form.hidden_tag() }}
+                <div class="mb-3">
+                    {{ form.name.label(class='form-label') }}
+                    {{ form.name(class='form-control', placeholder='Enter your name') }}
+                
+                    {% for error in form.name.errors %}
+                        <div class="text-danger">
+                            {{ error }}
+                        </div>
+                    {% endfor %}    
+                </div>
+
+                <div class="mb-3">
+                    {{ form.email.label(class='form-label') }}
+                    {{ form.email(class='form-control', placeholder='Enter your email') }}
+                    {% for error in form.email.errors %}
+                        <div class="text-danger">
+                            {{ error }}
+                        </div>
+                    {% endfor %}   
+                </div>
+
+                <div class="mb-3">
+                    {{ form.password.label(class='form-label') }}
+                    {{ form.password(class='form-control', placeholder='Create a password') }}
+                        {% for error in form.password.errors %}
+                        <div class="text-danger">
+                            {{ error }}
+                        </div>
+                    {% endfor %}   
+                </div>
+
+                <div class="mb-4">
+                    {{ form.confirm_password.label(class='form-label') }}
+                    {{ form.confirm_password(class='form-control', placeholder='Confirm your password') }}
+                    {% for error in form.confirm_password.errors %}
+                        <div class="text-danger">
+                            {{ error }}
+                        </div>
+                    {% endfor %}   
+                </div>
+                {{ form.submit(class='btn btn-primary w-100') }}
+            </form>
+
+            <div class="text-center mt-4">
+                <p class="mb-0">
+                    Already have an account?
+                    <a href="#" class="register-login-link">Log in</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}
