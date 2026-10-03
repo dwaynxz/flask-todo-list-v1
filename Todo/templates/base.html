@@ -25,7 +25,7 @@
                 <a class="navlinks fs-3 pt-2" aria-current="page" href="{{ url_for('main.home') }}">Home</a>
               </li>
               <li class="nav-item">
-                <a class="navlinks fs-3 pt-2" href="{{ url_for('main.create_list') }}">Create a list</a>
+                <a class="navlinks fs-3 pt-2" href="{{ url_for('main.get_list') }}">Create a list</a>
               </li>
               {% if not current_user.is_authenticated %}
                 <li class="nav-item">

@@ -6,12 +6,12 @@
 <main>
         {% if to_do_lists.is_empty() %}
             <div class="d-flex justify-content-center align-items-center vh-100">
-                <a class="disabled-link" href="{{ url_for('main.create_list') }}">
+                <a class="disabled-link" href="{{ url_for('main.get_list') }}">
                     You don't have lists click here or click on the + icon
                 </a>
             </div>
                 <div class="container py-5 pt-5 mt-5 position-absolute bottom-0 end-0 d-inline-block p-0 m-0">
-                    <a href="{{ url_for('main.create_list') }}" class="btn btn-info btn-lg rounded-circle">+</a>
+                    <a href="{{ url_for('main.get_list') }}" class="btn btn-info btn-lg rounded-circle">+</a>
                 </div>
         {% else %}
             <div class="container py-5 pt-5 mt-5">
@@ -29,7 +29,7 @@
                 </ul>
                 </div>
                 <div class="container py-5 pt-5 mt-5 position-absolute bottom-0 end-0 d-inline-block p-0 m-0">
-                    <a href="{{ url_for('main.create_list') }}" class="btn btn-info btn-lg rounded-circle">+</a>
+                    <a href="{{ url_for('main.get_list') }}" class="btn btn-info btn-lg rounded-circle">+</a>
                 </div>
             </div>
 </main>

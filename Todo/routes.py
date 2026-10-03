@@ -1,5 +1,5 @@
 from Todo.main import todo, ListManager, TodoList
-from flask import render_template, request, flash, redirect, url_for, Blueprint
+from flask import render_template, request, flash, redirect, url_for, Blueprint, session
 from Todo.forms import RegistrationForm, LoginForm
 from Todo.models import User, List, ListItems
 from Todo.extensions import bcrypt, db, login_manager
@@ -13,11 +13,25 @@ to_do_lists = ListManager()
 @main.route("/")
 @main.route("/home")
 def home():
+    # if current_user.is_authenticated:
+    #     last_list = List.query.filter_by(user_id=current_user.id)[-1]
+    #     if len(last_list.query.all()) == 0:
+    #         db.session.delete(last_list)
+    #         db.session.commit()
     return render_template("homepage.html", to_do_lists=to_do_lists)
 
-@main.route("/create-todo")
-def create_list():
-    return render_template("create_list.html", to_do_list=to_do_list)
+@main.route("/get-list-id") # gets the new list created by the current user
+def get_list():
+    if current_user.is_authenticated:
+        todo_list = List(user_id=current_user.id)
+        db.session.add(todo_list)
+        db.session.commit()
+        return redirect(url_for("main.create_list", list_id=todo_list.list_id))
+
+@main.route("/create-todo/<int:list_id>")
+def create_list(list_id):
+    user_list_items = ListItems.query.filter_by(list_id=list_id).all()
+    return render_template("create_list.html", todo_list = user_list_items, list_length=len(user_list_items))
 
 @main.route("/add", methods=["POST"])
 def add():
@@ -28,6 +42,8 @@ def add():
     else:
         todo.add(task)
         flash ("Task added", category="success")
+        # if current_user.is_authenticated:
+
         return redirect(url_for("main.create_list"))
 
 @main.route("/add-existing/<int:id_>", methods=["POST"])

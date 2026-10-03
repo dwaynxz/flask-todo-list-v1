@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
 class List(db.Model):
     list_id = db.Column(db.Integer, primary_key = True, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    list_title = db.Column(db.String(600), nullable=False)
+    list_title = db.Column(db.String(600))
     # one list can have multiple list items
     list_items = db.relationship("ListItems", backref="list", lazy=True)
 

@@ -4,19 +4,18 @@
 <main class="container py-5 pt-5 mt-5">
         <div class="card shadow-sm">
             <div class="card-body">
-                {% if to_do_list.is_empty() %}
+                {% if list_length == 0 %}
                     <p class="lead text-muted text-center mb-0">
                         List is empty. Add Items!!
                     </p>
                 {% else %}
-                    {% for id_status, task in to_do_list.list.items() %}
-                        {% with task_id = to_do_list.get_id_by_status_id(id_status) %}
+                    {% for item in todo_list %}
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                        {% if to_do_list.get_status_by_task_id(task_id) %}
+                                        {% if item.status %}
                                             <div class="d-flex align-items-center gap-2">
                                                 <label class="m-0">
-                                                    <span class="fs-5 text-secondary task-done">{{task}}</span>
+                                                    <span class="fs-5 text-secondary task-done">{{item.list_item}}</span>
                                                 </label>
                                                 <form action="{{ url_for('main.task_undone', task_id=task_id) }}" method="post">
                                                     <button type="submit" class="btn btn-outline-warning">↶</button>
@@ -28,7 +27,7 @@
                                         {% else %}
                                             <div class="d-flex align-items-center gap-2">
                                                 <label class="m-0">
-                                                    <span class="fs-5 text-secondary">{{task}}</span>
+                                                    <span class="fs-5 text-secondary">{{item.list_item}}</span>
                                                 </label>
                                                  <form action="{{ url_for('main.task_done', task_id=task_id) }}" method="post">
                                                     <button type="submit" class="btn btn-success">✔</button>
@@ -41,7 +40,6 @@
                                     <br>
                                 </li>
                             </ul>
-                        {% endwith %}
                     {% endfor %}
                 {% endif %}
                 <br>
