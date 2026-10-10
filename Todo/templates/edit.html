@@ -7,59 +7,72 @@
 <main class="container py-5 pt-5 mt-5">
         <div class="card shadow-sm">
             <div class="card-body">
-                {% if list.is_empty() %}
+                {% if lit_length == 0 %}
                     <p class="lead text-muted text-center mb-0">
                         List is empty. Add Items!!
                     </p>
                 {% else %}
-                    {% for id_status, task in list.list.items() %}
-                        {% with task_id = list.get_id_by_status_id(id_status) %}
+                    {% for item in list %}
                             <ul class="list-group">
                                 <li class="list-group-item">
-                                        {% if list.get_status_by_task_id(task_id) %}
+                                        {% if item.status %}
                                             <div class="d-flex align-items-center gap-2">
                                                 <label class="m-0">
-                                                    <span class="fs-5 text-secondary task-done">{{task}}</span>
+                                                    <span class="fs-5 text-secondary task-done">{{ item.list_item }}</span>
                                                 </label>
-                                                <form action="{{ url_for('main.existing_task_undone', task_id=task_id, id_=id_) }}" method="post">
+                                                <form action="{{ url_for('main.task_undone') }}" method="post">
+                                                    <input type="hidden" name="list_id" value="{{ list_id }}">
+                                                    <input type="hidden" name="task_id" value="{{ item.list_items_id }}">
                                                     <button type="submit" class="btn btn-outline-warning">↶</button>
                                                 </form>
-                                                <form action="{{ url_for('main.existing_task_remove', task_id=task_id, id_=id_) }}" method="post">
-                                                       <button type="submit" class="btn btn-danger">🗑️</button>
+                                                <form action="{{ url_for('main.task_remove') }}" method="post">
+                                                    <input type="hidden" name="list_id" value="{{ list_id }}">
+                                                    <input type="hidden" name="task_id" value="{{ item.list_items_id }}">     
+                                                    <button type="submit" class="btn btn-danger">🗑️</button>
                                                 </form>
                                             </div>
                                         {% else %}
                                             <div class="d-flex align-items-center gap-2">
                                                 <label class="m-0">
-                                                    <span class="fs-5 text-secondary">{{task}}</span>
+                                                    <span class="fs-5 text-secondary">{{ item.list_item }}</span>
                                                 </label>
-                                                 <form action="{{ url_for('main.existing_task_done', task_id=task_id, id_=id_) }}" method="post">
+                                                 <form action="{{ url_for('main.task_done') }}" method="post">
+                                                    <input type="hidden" name="list_id" value="{{ list_id }}">
+                                                    <input type="hidden" name="task_id" value="{{ item.list_items_id }}">
                                                     <button type="submit" class="btn btn-success">✔</button>
                                                  </form>
-                                                   <form action="{{ url_for('main.existing_task_remove', task_id=task_id, id_=id_) }}" method="post">
-                                                       <button type="submit" class="btn btn-danger">🗑️</button>
+                                                   <form action="{{ url_for('main.task_remove') }}" method="post">
+                                                    <input type="hidden" name="list_id" value="{{ list_id }}">
+                                                    <input type="hidden" name="task_id" value="{{ item.list_items_id }}">
+                                                    <button type="submit" class="btn btn-danger">🗑️</button>
                                                     </form>
                                              </div>
                                         {% endif %}
                                     <br>
                                 </li>
                             </ul>
-                        {% endwith %}
                     {% endfor %}
                 {% endif %}
                 <br>
                 <br>
             </div>
         </div>
-        <form action="{{ url_for('main.add_existing', id_=id_) }}" method="post" class="mt-4 d-flex gap-2">
+        <form action="{{ url_for('main.add')}}" method="post" class="mt-4 d-flex gap-2">
             <label for="item" id="item">
                 <input type="text" class="form-control border-primary shadow-sm" placeholder="Task" name="task">
+                <input type="hidden" name="list_id" value="{{ list_id }}">
             </label>
             <button type="submit" class="btn btn-outline-primary"> Add </button>
         </form>
         <br>
         <br>
-    <form action="/save-existing" method="post">
+        <form action="{{ url_for('main.save') }}" method="post">
+        <label for="title" id="title">
+            <input type="hidden" name="list_id" value="{{ list_id }}">
+            <input type="text" value="{{ list_title }}" name="title" class="border border-primary-subtle" placeholder="Title">
+        </label>
+        <br>
+        <br>
         <button type="submit" class="btn btn-outline-secondary">Save</button>
     </form>
 </main>

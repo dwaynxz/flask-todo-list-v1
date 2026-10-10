@@ -65,6 +65,7 @@
         <br>
     <form action="{{ url_for('main.save') }}" method="post">
         <label for="title" id="title">
+            <input type="hidden" name="list_id" value="{{ list_id }}">
             <input type="text" name="title" class="border border-primary-subtle" placeholder="Title">
         </label>
         <br>

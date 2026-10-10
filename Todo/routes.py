@@ -23,7 +23,7 @@ def home():
 @main.route("/get-list-id") # gets the new list created by the current user
 def get_list():
     if current_user.is_authenticated:
-        todo_list = List(user_id=current_user.id)
+        todo_list = List(user_id=current_user.id, list_title="Untitled list")
         db.session.add(todo_list)
         db.session.commit()
         return redirect(url_for("main.create_list", list_id=todo_list.list_id))
@@ -62,25 +62,26 @@ def add_existing(id_):
 @main.route("/save", methods=["POST"])
 def save():
     title = request.form.get("title")
+    list_id = request.form.get("list_id")
+    list = List.query.get(list_id)
     if not title:
-        flash("Title cant be empty!", "danger")
-        return redirect(url_for("main.create_list"))
+        list.list_title = "Untitled list"
     else:
-        to_do_list_copy = TodoList(to_do_list.list.copy())
-        to_do_lists.add_list(title=title,todolist=to_do_list_copy)
-        to_do_list.clear_list()
-        flash("Saved", "success")
-        return redirect(url_for("main.home"))
+        list.list_title = title
+    db.session.commit()
+    flash("Saved", "success")
+    return redirect(url_for("main.home"))
 
 @main.route("/save-existing", methods=["POST"])
 def save_existing():
     flash("Saved", "success")
     return redirect(url_for("main.home"))
 
-@main.route("/edit/<int:id_>")
-def edit(id_):
-    current_list = to_do_lists.fetch_list(id_)
-    return render_template("edit.html", list=current_list, id_=id_)
+@main.route("/edit/<int:list_id>")
+def edit(list_id):
+    todo_list = ListItems.query.filter_by(list_id=list_id).all()
+    list_title = List.query.get(list_id).list_title
+    return render_template("edit.html", list=todo_list, list_id=list_id, list_length=len(todo_list), list_title=list_title)
 
 @main.route("/delete-existing/<int:id_>", methods=["POST"])
 def delete_existing(id_):
@@ -118,6 +119,15 @@ def task_undone():
     db.session.add(task)
     db.session.commit()
     return redirect(url_for("main.create_list", list_id=list_id))
+
+@main.route("/delete-list", methods=["POST"])
+def delete_list():
+    list_id = request.form.get("list_id")
+    list = List.query.get(list_id) # retrieves the list that is to be deleted
+    db.session.delete(list) 
+    db.session.commit()
+    flash("Deleted", "danger")
+    return redirect(url_for("main.home"))
 
 @main.route("/existing-task-remove/<int:id_>/<int:task_id>", methods=["POST"])
 def existing_task_remove(id_, task_id):
