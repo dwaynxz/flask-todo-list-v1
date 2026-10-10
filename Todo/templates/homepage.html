@@ -4,7 +4,8 @@
 
 {% block content %}
 <main>
-        {% if to_do_lists.is_empty() %}
+    {% if current_user.is_authenticated %}
+        {% if lists_size == 0 %}
             <div class="d-flex justify-content-center align-items-center vh-100">
                 <a class="disabled-link" href="{{ url_for('main.get_list') }}">
                     You don't have lists click here or click on the + icon
@@ -17,15 +18,16 @@
             <div class="container py-5 pt-5 mt-5">
                 <div class="mx-auto text-center">
                 <ul class="list-group">
-                    {% for id_,title in to_do_lists.lists %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center"><a href="{{ url_for('main.edit', id_=id_) }}" class="btn btn-lg btn-outline-dark button-dimensions  mx-auto text-center">{{title}}</a>
-                             <form action="{{ url_for('main.delete_existing', id_= id_) }}" method="post">
+                    {% for list in lists %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center"><a href="" class="btn btn-lg btn-outline-dark button-dimensions  mx-auto text-center">{{list.list_title}}</a>
+                             <form action="" method="post">
                                  <button type="submit" class="btn btn-danger">Delete</button>
                              </form>
                         </li>
 
                     {% endfor %}
             {% endif %}
+    {% endif %}
                 </ul>
                 </div>
                 <div class="container py-5 pt-5 mt-5 position-absolute bottom-0 end-0 d-inline-block p-0 m-0">

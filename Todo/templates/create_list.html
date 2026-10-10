@@ -29,10 +29,10 @@
                                                 <label class="m-0">
                                                     <span class="fs-5 text-secondary">{{item.list_item}}</span>
                                                 </label>
-                                                 <form action="{{ url_for('main.task_done', task_id=task_id) }}" method="post">
+                                                 <form action="" method="post">
                                                     <button type="submit" class="btn btn-success">✔</button>
                                                  </form>
-                                                   <form action="{{ url_for('main.task_remove', task_id=task_id) }}" method="post">
+                                                   <form action="" method="post">
                                                        <button type="submit" class="btn btn-danger">🗑️</button>
                                                     </form>
                                              </div>
@@ -46,9 +46,10 @@
                 <br>
             </div>
         </div>
-        <form action="/add" method="post" class="mt-4 d-flex gap-2">
+        <form action="{{url_for('main.add')}}" method="post" class="mt-4 d-flex gap-2">
             <label for="item" id="item">
                 <input type="text" class="form-control border-primary shadow-sm" placeholder="Task" name="task">
+                <input type="hidden" value="{{ list_id }}" name="list_id">
             </label>
             <button type="submit" class="btn btn-outline-primary"> Add </button>
         </form>

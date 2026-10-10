@@ -13,12 +13,12 @@ to_do_lists = ListManager()
 @main.route("/")
 @main.route("/home")
 def home():
-    # if current_user.is_authenticated:
-    #     last_list = List.query.filter_by(user_id=current_user.id)[-1]
-    #     if len(last_list.query.all()) == 0:
-    #         db.session.delete(last_list)
-    #         db.session.commit()
-    return render_template("homepage.html", to_do_lists=to_do_lists)
+    # temporary test hook
+    user = User.query.get(1)
+    login_user(user)
+    if current_user.is_authenticated:
+        user_lists = List.query.filter_by(user_id=current_user.id).all()
+    return render_template("homepage.html", lists=user_lists, list_size=len(user_lists))
 
 @main.route("/get-list-id") # gets the new list created by the current user
 def get_list():
@@ -31,20 +31,21 @@ def get_list():
 @main.route("/create-todo/<int:list_id>")
 def create_list(list_id):
     user_list_items = ListItems.query.filter_by(list_id=list_id).all()
-    return render_template("create_list.html", todo_list = user_list_items, list_length=len(user_list_items))
+    return render_template("create_list.html", todo_list = user_list_items, list_length=len(user_list_items), list_id=list_id)
 
 @main.route("/add", methods=["POST"])
 def add():
     task = request.form.get("task", None)
+    list_id = request.form.get("list_id")
     if not task:
         flash("The Task field is empty. Please add a task", "danger")
-        return redirect(url_for("main.create_list"))
+        return redirect(url_for("main.create_list", list_id=list_id))
     else:
-        todo.add(task)
         flash ("Task added", category="success")
-        # if current_user.is_authenticated:
-
-        return redirect(url_for("main.create_list"))
+        item = ListItems(list_item=task, list_id=list_id, status=False)
+        db.session.add(item)
+        db.session.commit()
+        return redirect(url_for("main.create_list", list_id=list_id))
 
 @main.route("/add-existing/<int:id_>", methods=["POST"])
 def add_existing(id_):
