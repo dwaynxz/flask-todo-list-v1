@@ -18,11 +18,13 @@
                                                     <span class="fs-5 text-secondary task-done">{{item.list_item}}</span>
                                                 </label>
                                                 <form action="{{ url_for('main.task_undone') }}" method="post">
+                                                    <input type="hidden" value="create" name="return_to">
                                                     <input type="hidden" value="{{ item.list_items_id }}" name="task_id">
                                                     <input type="hidden" value="{{ item.list_id }}" name="list_id">                                      
                                                     <button type="submit" class="btn btn-outline-warning">↶</button>
                                                 </form>
                                                 <form action="{{ url_for('main.task_remove') }}" method="post">
+                                                        <input type="hidden" value="create" name="return_to">
                                                         <input type="hidden" value="{{ item.list_items_id }}" name="task_id">
                                                         <input type="hidden" value="{{ item.list_id }}" name="list_id">
                                                        <button type="submit" class="btn btn-danger">🗑️</button>
@@ -34,11 +36,13 @@
                                                     <span class="fs-5 text-secondary">{{item.list_item}}</span>
                                                 </label>
                                                  <form action="{{ url_for('main.task_done') }}" method="post">
+                                                    <input type="hidden" value="create" name="return_to">
                                                     <input type="hidden" value="{{ item.list_items_id }}" name="task_id">
                                                     <input type="hidden" value="{{ item.list_id }}" name="list_id">
                                                     <button type="submit" class="btn btn-success">✔</button>
                                                  </form>
                                                 <form action="{{ url_for('main.task_remove') }}" method="post">
+                                                        <input type="hidden" value="create" name="return_to">
                                                         <input type="hidden" value="{{ item.list_items_id }}" name="task_id">
                                                         <input type="hidden" value="{{ item.list_id }}" name="list_id">
                                                        <button type="submit" class="btn btn-danger">🗑️</button>
@@ -56,6 +60,7 @@
         </div>
         <form action="{{url_for('main.add')}}" method="post" class="mt-4 d-flex gap-2">
             <label for="item" id="item">
+                <input type="hidden" value="create" name="return_to">
                 <input type="text" class="form-control border-primary shadow-sm" placeholder="Task" name="task">
                 <input type="hidden" value="{{ list_id }}" name="list_id">
             </label>
@@ -65,6 +70,7 @@
         <br>
     <form action="{{ url_for('main.save') }}" method="post">
         <label for="title" id="title">
+            <input type="hidden" value="create" name="return_to">
             <input type="hidden" name="list_id" value="{{ list_id }}">
             <input type="text" name="title" class="border border-primary-subtle" placeholder="Title">
         </label>
