@@ -30,7 +30,7 @@ def get_list():
 
 @main.route("/create-todo/<int:list_id>")
 def create_list(list_id):
-    user_list_items = ListItems.query.filter_by(list_id=list_id).all()
+    user_list_items = ListItems.query.filter_by(list_id=list_id).all() # gets the list items
     return render_template("create_list.html", todo_list = user_list_items, list_length=len(user_list_items), list_id=list_id)
 
 @main.route("/add", methods=["POST"])
@@ -44,7 +44,7 @@ def add():
         flash ("Task added", category="success")
         item = ListItems(list_item=task, list_id=list_id, status=False)
         db.session.add(item)
-        db.session.commit()
+        db.session.commit() # saves the new item in database
         return redirect(url_for("main.create_list", list_id=list_id))
 
 @main.route("/add-existing/<int:id_>", methods=["POST"])
@@ -89,21 +89,35 @@ def delete_existing(id_):
     flash("Deleted", "danger")
     return redirect(url_for("main.home"))
 
-@main.route("/task-remove/<int:task_id>", methods=["POST"])
-def task_remove(task_id):
-    key = to_do_list.get_key_by_id(task_id)
-    to_do_list.delete_task(key)
-    return redirect(url_for("main.create_list"))
+@main.route("/task-remove", methods=["POST"])
+def task_remove():
+    task_id = request.form.get("task_id")
+    list_id = request.form.get("list_id")
+    task = ListItems.query.get(task_id) # gets the task that will be removed
+    db.session.delete(task) # deletes the task from the database
+    db.session.commit()
+    flash("Deleted", "danger")
+    return redirect(url_for("main.create_list", list_id=list_id))
 
-@main.route("/task-done/<int:task_id>", methods=["POST"])
-def task_done(task_id):
-    to_do_list.mark_task_done(task_id)
-    return redirect(url_for("main.create_list"))
+@main.route("/task-done", methods=["POST"])
+def task_done():
+    task_id = request.form.get("task_id")
+    list_id = request.form.get("list_id")
+    task = ListItems.query.get(task_id)
+    task.status = True # marks the task as done
+    db.session.add(task)
+    db.session.commit()
+    return redirect(url_for("main.create_list", list_id=list_id))
 
-@main.route("/task-undone/<int:task_id>", methods=["POST"])
-def task_undone(task_id):
-    to_do_list.mark_task_undone(task_id)
-    return redirect(url_for("main.create_list"))
+@main.route("/task-undone", methods=["POST"])
+def task_undone():
+    task_id = request.form.get("task_id")
+    list_id = request.form.get("list_id")
+    task = ListItems.query.get(task_id)
+    task.status = False # marks the task as undone
+    db.session.add(task)
+    db.session.commit()
+    return redirect(url_for("main.create_list", list_id=list_id))
 
 @main.route("/existing-task-remove/<int:id_>/<int:task_id>", methods=["POST"])
 def existing_task_remove(id_, task_id):
