@@ -1,4 +1,3 @@
-from Todo.main import todo, ListManager, TodoList
 from flask import render_template, request, flash, redirect, url_for, Blueprint, session
 from Todo.forms import RegistrationForm, LoginForm
 from Todo.models import User, List, ListItems
@@ -7,8 +6,17 @@ from flask_login import login_user, logout_user, current_user
 
 main = Blueprint("main", __name__)
 
-to_do_list = todo
-to_do_lists = ListManager()
+#---Helper functions---
+
+@main.route("/get-list-id") # gets the new list created by the current user
+def get_list():
+    if current_user.is_authenticated:
+        todo_list = List(user_id=current_user.id, list_title="Untitled list")
+        db.session.add(todo_list)
+        db.session.commit()
+        return redirect(url_for("main.create_list", list_id=todo_list.list_id))
+
+#---Homepage and list views---
 
 @main.route("/")
 @main.route("/home")
@@ -20,18 +28,42 @@ def home():
         user_lists = List.query.filter_by(user_id=current_user.id).all()
     return render_template("homepage.html", lists=user_lists, list_size=len(user_lists))
 
-@main.route("/get-list-id") # gets the new list created by the current user
-def get_list():
-    if current_user.is_authenticated:
-        todo_list = List(user_id=current_user.id, list_title="Untitled list")
-        db.session.add(todo_list)
-        db.session.commit()
-        return redirect(url_for("main.create_list", list_id=todo_list.list_id))
-
 @main.route("/create-todo/<int:list_id>")
 def create_list(list_id):
     user_list_items = ListItems.query.filter_by(list_id=list_id).all() # gets the list items
     return render_template("create_list.html", todo_list = user_list_items, list_length=len(user_list_items), list_id=list_id)
+
+@main.route("/edit/<int:list_id>")
+def edit(list_id):
+    todo_list = ListItems.query.filter_by(list_id=list_id).all()
+    list_title = List.query.get(list_id).list_title
+    return render_template("edit.html", list=todo_list, list_id=list_id, list_length=len(todo_list), list_title=list_title)
+
+#---List Management---
+
+@main.route("/save", methods=["POST"])
+def save():
+    title = request.form.get("title")
+    list_id = request.form.get("list_id")
+    list = List.query.get(list_id)
+    if not title:
+        list.list_title = "Untitled list"
+    else:
+        list.list_title = title
+    db.session.commit()
+    flash("Saved", "success")
+    return redirect(url_for("main.home"))
+
+@main.route("/delete-list", methods=["POST"])
+def delete_list():
+    list_id = request.form.get("list_id")
+    list = List.query.get(list_id) # retrieves the list that is to be deleted
+    db.session.delete(list) 
+    db.session.commit()
+    flash("Deleted", "danger")
+    return redirect(url_for("main.home"))
+
+#---Task Management---
 
 @main.route("/add", methods=["POST"])
 def add():
@@ -50,27 +82,6 @@ def add():
             return redirect(url_for("main.create_list", list_id=list_id))
         else:
             return redirect(url_for("main.edit", list_id=list_id))
-
-@main.route("/save", methods=["POST"])
-def save():
-    title = request.form.get("title")
-    list_id = request.form.get("list_id")
-    list = List.query.get(list_id)
-    if not title:
-        list.list_title = "Untitled list"
-    else:
-        list.list_title = title
-    db.session.commit()
-    flash("Saved", "success")
-    return redirect(url_for("main.home"))
-
-
-@main.route("/edit/<int:list_id>")
-def edit(list_id):
-    todo_list = ListItems.query.filter_by(list_id=list_id).all()
-    list_title = List.query.get(list_id).list_title
-    return render_template("edit.html", list=todo_list, list_id=list_id, list_length=len(todo_list), list_title=list_title)
-
 
 @main.route("/task-remove", methods=["POST"])
 def task_remove():
@@ -114,16 +125,9 @@ def task_undone():
     else:
         return redirect(url_for("main.edit", list_id=list_id))
 
-@main.route("/delete-list", methods=["POST"])
-def delete_list():
-    list_id = request.form.get("list_id")
-    list = List.query.get(list_id) # retrieves the list that is to be deleted
-    db.session.delete(list) 
-    db.session.commit()
-    flash("Deleted", "danger")
-    return redirect(url_for("main.home"))
 
-#---Registration route---
+#---Authentication---
+
 @main.route("/register", methods=["GET", "POST"])
 def register():
     form = RegistrationForm()
@@ -143,7 +147,6 @@ def register():
             return redirect(url_for("main.home"))
     return render_template("register.html", form=form)
 
-#---Login route---
 @main.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
@@ -163,7 +166,6 @@ def login():
                 return redirect(url_for("main.home"))
     return render_template("login.html", form=form)
 
-#---Logout route---
 @main.route("/logout")
 def logout():
     logout_user()
