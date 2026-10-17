@@ -17,7 +17,7 @@ def create_app():
     login_manager.init_app(app)
     bcrypt.init_app(app)
 
-    login_manager.login_view = "login"
+    login_manager.login_view = "main.login"
     from Todo.routes import main
     app.register_blueprint(main)
     return app

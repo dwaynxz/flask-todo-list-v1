@@ -2,13 +2,14 @@ from flask import render_template, request, flash, redirect, url_for, Blueprint,
 from Todo.forms import RegistrationForm, LoginForm
 from Todo.models import User, List, ListItems
 from Todo.extensions import bcrypt, db, login_manager
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 
 main = Blueprint("main", __name__)
 
 #---Helper functions---
 
 @main.route("/get-list-id") # gets the new list created by the current user
+@login_required
 def get_list():
     if current_user.is_authenticated:
         todo_list = List(user_id=current_user.id, list_title="Untitled list")
@@ -21,19 +22,23 @@ def get_list():
 @main.route("/")
 @main.route("/home")
 def home():
-    # temporary test hook
-    user = User.query.get(1)
-    login_user(user)
+    # # temporary test hook
+    # user = User.query.get(1)
+    # login_user(user)
     if current_user.is_authenticated:
         user_lists = List.query.filter_by(user_id=current_user.id).all()
-    return render_template("homepage.html", lists=user_lists, list_size=len(user_lists))
+        return render_template("homepage.html", lists=user_lists, list_size=len(user_lists))
+    else:
+        return render_template("homepage.html")
 
 @main.route("/create-todo/<int:list_id>")
+@login_required
 def create_list(list_id):
     user_list_items = ListItems.query.filter_by(list_id=list_id).all() # gets the list items
     return render_template("create_list.html", todo_list = user_list_items, list_length=len(user_list_items), list_id=list_id)
 
 @main.route("/edit/<int:list_id>")
+@login_required
 def edit(list_id):
     todo_list = ListItems.query.filter_by(list_id=list_id).all()
     list_title = List.query.get(list_id).list_title
@@ -42,6 +47,7 @@ def edit(list_id):
 #---List Management---
 
 @main.route("/save", methods=["POST"])
+@login_required
 def save():
     title = request.form.get("title")
     list_id = request.form.get("list_id")
@@ -55,6 +61,7 @@ def save():
     return redirect(url_for("main.home"))
 
 @main.route("/delete-list", methods=["POST"])
+@login_required
 def delete_list():
     list_id = request.form.get("list_id")
     list = List.query.get(list_id) # retrieves the list that is to be deleted
@@ -66,6 +73,7 @@ def delete_list():
 #---Task Management---
 
 @main.route("/add", methods=["POST"])
+@login_required
 def add():
     task = request.form.get("task", None)
     list_id = request.form.get("list_id")
@@ -84,6 +92,7 @@ def add():
             return redirect(url_for("main.edit", list_id=list_id))
 
 @main.route("/task-remove", methods=["POST"])
+@login_required
 def task_remove():
     task_id = request.form.get("task_id")
     list_id = request.form.get("list_id")
@@ -98,6 +107,7 @@ def task_remove():
         return redirect(url_for("main.edit", list_id=list_id))
 
 @main.route("/task-done", methods=["POST"])
+@login_required
 def task_done():
     task_id = request.form.get("task_id")
     list_id = request.form.get("list_id")
@@ -112,6 +122,7 @@ def task_done():
         return redirect(url_for("main.edit", list_id=list_id))
 
 @main.route("/task-undone", methods=["POST"])
+@login_required
 def task_undone():
     task_id = request.form.get("task_id")
     list_id = request.form.get("list_id")
