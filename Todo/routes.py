@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect, url_for, Blueprint, session
+from flask import render_template, request, flash, redirect, url_for, Blueprint, session, abort
 from Todo.forms import RegistrationForm, LoginForm
 from Todo.models import User, List, ListItems
 from Todo.extensions import bcrypt, db, login_manager
@@ -17,14 +17,19 @@ def get_list():
         db.session.commit()
         return redirect(url_for("main.create_list", list_id=todo_list.list_id))
 
+def get_user_list_or_403(list_id):
+    user_list = List.query.get(list_id) # retrieves the list
+    if user_list is None: # returns a 404 error if the list is not found
+        abort(404)
+    if user_list.user_id != current_user.id:
+        abort(403) # return a 403 error if the list doesn't belong to the logged in user
+    return user_list
+
 #---Homepage and list views---
 
 @main.route("/")
 @main.route("/home")
 def home():
-    # # temporary test hook
-    # user = User.query.get(1)
-    # login_user(user)
     if current_user.is_authenticated:
         user_lists = List.query.filter_by(user_id=current_user.id).all()
         return render_template("homepage.html", lists=user_lists, list_size=len(user_lists))
@@ -34,12 +39,14 @@ def home():
 @main.route("/create-todo/<int:list_id>")
 @login_required
 def create_list(list_id):
+    user_list = get_user_list_or_403(list_id)
     user_list_items = ListItems.query.filter_by(list_id=list_id).all() # gets the list items
     return render_template("create_list.html", todo_list = user_list_items, list_length=len(user_list_items), list_id=list_id)
 
 @main.route("/edit/<int:list_id>")
 @login_required
 def edit(list_id):
+    user_list = get_user_list_or_403(list_id)
     todo_list = ListItems.query.filter_by(list_id=list_id).all()
     list_title = List.query.get(list_id).list_title
     return render_template("edit.html", list=todo_list, list_id=list_id, list_length=len(todo_list), list_title=list_title)
@@ -52,6 +59,7 @@ def save():
     title = request.form.get("title")
     list_id = request.form.get("list_id")
     list = List.query.get(list_id)
+    user_list = get_user_list_or_403(list_id)
     if not title:
         list.list_title = "Untitled list"
     else:
@@ -64,6 +72,7 @@ def save():
 @login_required
 def delete_list():
     list_id = request.form.get("list_id")
+    user_list = get_user_list_or_403(list_id)
     list = List.query.get(list_id) # retrieves the list that is to be deleted
     db.session.delete(list) 
     db.session.commit()
@@ -77,6 +86,7 @@ def delete_list():
 def add():
     task = request.form.get("task", None)
     list_id = request.form.get("list_id")
+    user_list = get_user_list_or_403(list_id)
     return_to = request.form.get("return_to")
     if not task:
         flash("The Task field is empty. Please add a task", "danger")
@@ -97,6 +107,7 @@ def task_remove():
     task_id = request.form.get("task_id")
     list_id = request.form.get("list_id")
     return_to = request.form.get("return_to")
+    user_list = get_user_list_or_403(list_id)
     task = ListItems.query.get(task_id) # gets the task that will be removed
     db.session.delete(task) # deletes the task from the database
     db.session.commit()
@@ -111,6 +122,7 @@ def task_remove():
 def task_done():
     task_id = request.form.get("task_id")
     list_id = request.form.get("list_id")
+    user_list = get_user_list_or_403(list_id)
     task = ListItems.query.get(task_id)
     return_to = request.form.get("return_to")
     task.status = True # marks the task as done
@@ -126,6 +138,7 @@ def task_done():
 def task_undone():
     task_id = request.form.get("task_id")
     list_id = request.form.get("list_id")
+    user_list = get_user_list_or_403(list_id)
     return_to = request.form.get("return_to")
     task = ListItems.query.get(task_id)
     task.status = False # marks the task as undone
@@ -178,6 +191,7 @@ def login():
     return render_template("login.html", form=form)
 
 @main.route("/logout")
+@login_required
 def logout():
     logout_user()
     return redirect(url_for("main.home"))

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from dotenv import load_dotenv
 import os
 from Todo.extensions import db, bcrypt, login_manager
@@ -18,6 +18,17 @@ def create_app():
     bcrypt.init_app(app)
 
     login_manager.login_view = "main.login"
+
+    #---Error Handlers---
+
+    @app.errorhandler(403)
+    def forbidden(error):
+        return render_template("403.html"), 403
+
+    @app.errorhandler(404)
+    def page_not_found(error):
+        return render_template("404.html"), 404
+
     from Todo.routes import main
     app.register_blueprint(main)
     return app
